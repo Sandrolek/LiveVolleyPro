@@ -1,0 +1,31 @@
+package models
+
+import "time"
+
+type CreateGame struct {
+	RoundID   int    `json:"round_id" binding:"required"`
+	TeamID    int    `json:"team_id" binding:"required"`
+	OppTeamID int    `json:"opp_team_id" binding:"required"`
+	Date      string `json:"date" binding:"required"`
+	Win       bool   `json:"win"`
+}
+
+type UpdateGame struct {
+	Date string `json:"date"`
+	Win  *bool  `json:"win"`
+}
+
+type Game struct {
+	GameID    int       `gorm:"primaryKey" json:"game_id"`
+	RoundID   int       `json:"round_id"`
+	TeamID    int       `json:"team_id"`
+	OppTeamID int       `json:"opp_team_id"`
+	Date      time.Time `json:"date"`
+	Win       bool      `json:"win"`
+
+	Round   Round        `gorm:"foreignKey:RoundID"`
+	Team    Team         `gorm:"foreignKey:TeamID"`
+	Players []GamePlayer `gorm:"foreignKey:GameID"`
+	Sets    []Set        `gorm:"foreignKey:GameID"`
+	//OppTeam Team         `gorm:"foreignKey:OppTeamID"`
+}
