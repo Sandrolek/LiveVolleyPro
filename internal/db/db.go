@@ -18,16 +18,6 @@ func InitDB() {
 		log.Fatal("Failed to connect to PostgreSQL:", err)
 	}
 
-	//err = DB.Migrator().DropTable(
-	//	&models.Team{},
-	//	&models.Set{},
-	//	&models.SetAction{},
-	//	&models.Player{},
-	//	&models.Game{},
-	//	&models.Round{},
-	//	&models.Championship{},
-	//	&models.GamePlayer{},
-	//)
 	err = DB.AutoMigrate(
 		&models.User{},
 		&models.Team{},

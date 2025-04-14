@@ -12,5 +12,5 @@ type User struct {
 	Password string `gorm:"size:255" json:"password"`
 	Email    string `gorm:"size:255" json:"email"`
 
-	Teams []Team `gorm:"foreignKey:TeamID" json:"teams"`
+	Teams []Team `gorm:"foreignKey:UserID" json:"teams"`
 }
