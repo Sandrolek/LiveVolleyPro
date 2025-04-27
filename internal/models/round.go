@@ -22,6 +22,6 @@ type Round struct {
 	StartDate      *time.Time `json:"start_date"`
 	EndDate        *time.Time `json:"end_date"`
 
-	Championship Championship `gorm:"foreignKey:ChampionshipID"`
-	Games        []Game       `gorm:"foreignKey:RoundID"`
+	//Championship Championship `gorm:"foreignKey:ChampionshipID"`
+	Games []Game `gorm:"foreignKey:RoundID"`
 }

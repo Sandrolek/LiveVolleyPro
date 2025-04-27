@@ -32,11 +32,10 @@ func (h *GameHandler) CreateGame(c *gin.Context) {
 	}
 
 	game := models.Game{
-		RoundID:   input.RoundID,
-		TeamID:    input.TeamID,
-		OppTeamID: input.OppTeamID,
-		Date:      date,
-		Win:       input.Win,
+		RoundID: input.RoundID,
+		TeamID:  input.TeamID,
+		Date:    date,
+		Win:     input.Win,
 	}
 
 	if err := h.DB.Create(&game).Error; err != nil {
@@ -50,7 +49,7 @@ func (h *GameHandler) CreateGame(c *gin.Context) {
 // GET /games
 func (h *GameHandler) GetAllGames(c *gin.Context) {
 	var games []models.Game
-	if err := h.DB.Preload("Round").Preload("Team").Preload("OppTeam").Preload("Players").Preload("Sets").Find(&games).Error; err != nil {
+	if err := h.DB.Preload("Round").Preload("Team").Preload("Players").Preload("Sets").Find(&games).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch games"})
 		return
 	}

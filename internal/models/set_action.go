@@ -18,7 +18,7 @@ type SetAction struct {
 	PlayerID     int `json:"player_id"`
 	ActionRateID int `json:"action_rate_id"`
 
-	Set        Set        `gorm:"foreignKey:SetID"`
-	Player     Player     `gorm:"foreignKey:PlayerID"`
-	ActionRate ActionRate `gorm:"foreignKey:ActionRateID"`
+	//Set        Set        `gorm:"foreignKey:SetID"`
+	//Player     Player     `gorm:"foreignKey:PlayerID"`
+	//ActionRate ActionRate `gorm:"foreignKey:ActionRateID"`
 }

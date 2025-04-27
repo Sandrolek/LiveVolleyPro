@@ -6,5 +6,6 @@ type ActionRate struct {
 	HelpText     string `gorm:"size:255" json:"help_text"`
 	Signature    string `gorm:"size:45" json:"signature"`
 
-	Action Action `gorm:"foreignKey:ActionID"`
+	//Action Action `gorm:"foreignKey:ActionID"`
+	SetActions []SetAction `gorm:"foreignKey:ActionRateID"`
 }

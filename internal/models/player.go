@@ -13,8 +13,9 @@ type Player struct {
 	Number    *uint8     `json:"number"`
 	TeamID    int        `json:"team_id"`
 
-	Amplua Amplua `gorm:"foreignKey:AmpluaID"`
-	Team   Team   `gorm:"foreignKey:TeamID;"`
+	//Amplua Amplua `gorm:"foreignKey:PlayerID"`
+	//Team   Team   `gorm:"foreignKey:TeamID;"`
+	SetActions []SetAction `gorm:"foreignKey:PlayerID"`
 }
 
 type CreatePlayer struct {

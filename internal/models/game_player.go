@@ -15,6 +15,6 @@ type GamePlayer struct {
 	PlayerID     int `json:"player_id"`
 	GameID       int `json:"game_id"`
 
-	Player Player `gorm:"foreignKey:PlayerID"`
-	Game   Game   `gorm:"foreignKey:GameID;"`
+	//Player Player `gorm:"foreignKey:PlayerID"`
+	//Game   Game   `gorm:"foreignKey:GameID;"`
 }

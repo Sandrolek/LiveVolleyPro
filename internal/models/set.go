@@ -20,6 +20,6 @@ type Set struct {
 	TeamScore    int `json:"team_score"`
 	OppScore     int `json:"opp_score"`
 
-	Game       Game        `gorm:"foreignKey:GameID"`
+	//Game       Game        `gorm:"foreignKey:GameID"`
 	SetActions []SetAction `gorm:"foreignKey:SetID"`
 }

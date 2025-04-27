@@ -16,16 +16,14 @@ type UpdateGame struct {
 }
 
 type Game struct {
-	GameID    int       `gorm:"primaryKey" json:"game_id"`
-	RoundID   int       `json:"round_id"`
-	TeamID    int       `json:"team_id"`
-	OppTeamID int       `json:"opp_team_id"`
-	Date      time.Time `json:"date"`
-	Win       bool      `json:"win"`
+	GameID  int       `gorm:"primaryKey" json:"game_id"`
+	RoundID int       `json:"round_id"`
+	TeamID  int       `json:"team_id"`
+	Date    time.Time `json:"date"`
+	Win     bool      `json:"win"`
 
-	Round   Round        `gorm:"foreignKey:RoundID"`
-	Team    Team         `gorm:"foreignKey:TeamID"`
+	//Rounds  []Round      `gorm:"foreignKey:GameID"`
 	Players []GamePlayer `gorm:"foreignKey:GameID"`
+	Team    Team         `gorm:"foreignKey:TeamID"`
 	Sets    []Set        `gorm:"foreignKey:GameID"`
-	//OppTeam Team         `gorm:"foreignKey:OppTeamID"`
 }
