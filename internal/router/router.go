@@ -20,22 +20,88 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	// setHandler := handlers.NewSetHandler(db)
 	// setActionHandler := handlers.NewSetActionHandler(db)
 
-	api := r.Group("/api")
-
 	championshipHandler := handlers.NewChampionshipHandler(db)
 	roundHandler := handlers.NewRoundHandler(db)
+	userHandler := handlers.NewUserHandler(db)
+	teamHandler := handlers.NewTeamHandler(db)
+	gameHandler := handlers.NewGameHandler(db)
+	playerHandler := handlers.NewPlayerHandler(db)
+	setHandler := handlers.NewSetHandler(db)
+	ampluaHandler := handlers.NewAmpluaHandler(db)
 
-	api.POST("/championships", championshipHandler.Create)
-	api.GET("/championships", championshipHandler.GetAll)
-	api.GET("/championships/:id", championshipHandler.Get)
-	api.PUT("/championships/:id", championshipHandler.Update)
-	api.DELETE("/championships/:id", championshipHandler.Delete)
+	api := r.Group("/api")
 
-	api.POST("/rounds", roundHandler.Create)
-	api.GET("/rounds", roundHandler.GetAll)
-	api.GET("/rounds/:id", roundHandler.Get)
-	api.PUT("/rounds/:id", roundHandler.Update)
-	api.DELETE("/rounds/:id", roundHandler.Delete)
+	championships := api.Group("/championships")
+	{
+		championships.POST("/", championshipHandler.Create)
+		championships.GET("/", championshipHandler.GetAll)
+		championships.GET("/:id", championshipHandler.Get)
+		championships.PUT("/:id", championshipHandler.Update)
+		championships.DELETE("/:id", championshipHandler.Delete)
+	}
+
+	rounds := api.Group("/rounds")
+	{
+		rounds.POST("/", roundHandler.Create)
+		rounds.GET("/", roundHandler.GetAll)
+		rounds.GET("/:id", roundHandler.Get)
+		rounds.PUT("/:id", roundHandler.Update)
+		rounds.DELETE("/:id", roundHandler.Delete)
+	}
+
+	users := api.Group("/users")
+	{
+		users.POST("/", userHandler.Create)
+		users.GET("/", userHandler.GetAll)
+		users.GET("/:id", userHandler.Get)
+		users.PUT("/:id", userHandler.Update)
+		users.DELETE("/:id", userHandler.Delete)
+	}
+
+	teams := api.Group("/teams")
+	{
+		teams.POST("/", teamHandler.Create)
+		teams.GET("/", teamHandler.GetAll)
+		teams.GET("/:id", teamHandler.Get)
+		teams.PUT("/:id", teamHandler.Update)
+		teams.DELETE("/:id", teamHandler.Delete)
+	}
+
+	players := api.Group("/players")
+	{
+		players.POST("/", playerHandler.Create)
+		players.GET("/", playerHandler.GetAll)
+		players.GET("/:id", playerHandler.Get)
+		players.PUT("/:id", playerHandler.Update)
+		players.DELETE("/:id", playerHandler.Delete)
+	}
+
+	sets := api.Group("/sets")
+	{
+		sets.POST("/", setHandler.Create)
+		sets.GET("/", setHandler.GetAll)
+		sets.GET("/:id", setHandler.Get)
+		sets.PUT("/:id", setHandler.Update)
+		sets.DELETE("/:id", setHandler.Delete)
+	}
+
+	games := api.Group("/games")
+	{
+		games.POST("/", gameHandler.Create)
+		games.GET("/", gameHandler.GetAll)
+		games.GET("/:id", gameHandler.Get)
+		games.PUT("/:id", gameHandler.Update)
+		games.DELETE("/:id", gameHandler.Delete)
+	}
+
+	ampluas := api.Group("/ampluas")
+	{
+		ampluas.POST("/", ampluaHandler.Create)
+		ampluas.GET("/", ampluaHandler.GetAll)
+		ampluas.GET("/:id", ampluaHandler.Get)
+		ampluas.PUT("/:id", ampluaHandler.Update)
+		ampluas.DELETE("/:id", ampluaHandler.Delete)
+	}
 
 	// api := r.Group("/api/v1")
 	// {

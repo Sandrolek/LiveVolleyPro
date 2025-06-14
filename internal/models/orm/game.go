@@ -15,7 +15,7 @@ type Game struct {
 	Team   Team
 
 	OppTeamID int
-	OppTeam   Team `gorm:"foreignKey:OppTeamID"`
+	OppTeam   Team
 
 	Sets        []Set
 	GamePlayers []GamePlayer

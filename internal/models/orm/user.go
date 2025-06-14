@@ -1,11 +1,13 @@
 package orm
 
 type User struct {
-	UserID   int `gorm:"primaryKey"`
+	UserID int `gorm:"primaryKey"`
+
 	Name     string
 	Password string
 	Email    string
-	Teams    []Team
+
+	Teams []Team
 }
 
 // type User struct {
@@ -18,9 +20,3 @@ type User struct {
 // 	// Teams []Team `gorm:"foreignKey:UserID"`
 // 	// Teams []Team `gorm:"foreignKey:UserID" json:"teams"`
 // }
-
-type CreateUser struct {
-	Name     string `json:"name" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-}

@@ -1,13 +1,5 @@
 package orm
 
-type CreateAmplua struct {
-	Name string `json:"name" binding:"required"`
-}
-
-type UpdateAmplua struct {
-	Name string `json:"name" binding:"required"`
-}
-
 type Amplua struct {
 	AmpluaID int `gorm:"primaryKey"`
 	Name     string
