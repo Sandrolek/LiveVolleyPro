@@ -1,0 +1,103 @@
+{
+  "info": {
+    "name": "LiveVolleyPro API",
+    "_postman_id": "e250d59a-85bc-4f32-a7d4-f104fd5fc2ff",
+    "description": "Structured CRUD collection for LiveVolleyPro backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Championship",
+      "item": [
+        {
+          "name": "Create Championship",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Summer Championship 2025\",\n  \"start_date\": \"2025-07-01T00:00:00Z\",\n  \"end_date\": \"2025-07-15T00:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/championships",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "championships"]
+            }
+          }
+        },
+        {
+          "name": "Get All Championships",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/championships",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "championships"]
+            }
+          }
+        },
+        {
+          "name": "Get Championship by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/championships/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "championships", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Championship",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Summer Championship\",\n  \"start_date\": \"2025-07-01T00:00:00Z\",\n  \"end_date\": \"2025-07-20T00:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/championships/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "championships", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Championship",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/championships/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "championships", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

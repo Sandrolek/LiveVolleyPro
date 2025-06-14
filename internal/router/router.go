@@ -1,109 +1,116 @@
 package router
 
 import (
+	"volley/internal/handlers"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"volley/internal/handlers"
-	"volley/internal/repositories"
 )
 
-func SetupRouter(db *gorm.DB) *gin.Engine {
-	r := gin.Default()
+func SetupRouter(r *gin.Engine, db *gorm.DB) {
 
-	userRepo := repositories.NewUserRepository(db)
-	userHandler := handlers.NewUserHandler(userRepo)
-	playerHandler := handlers.NewPlayerHandler(db)
-	teamHandler := handlers.NewTeamHandler(db)
-	gameHandler := handlers.NewGameHandler(db)
-	roundHandler := handlers.NewRoundHandler(db)
-	champHandler := handlers.NewChampionshipHandler(db)
-	gamePlayerHandler := handlers.NewGamePlayerHandler(db)
-	setHandler := handlers.NewSetHandler(db)
-	setActionHandler := handlers.NewSetActionHandler(db)
+	// userRepo := repositories.NewUserRepository(db)
+	// userHandler := handlers.NewUserHandler(userRepo)
+	// playerHandler := handlers.NewPlayerHandler(db)
+	// teamHandler := handlers.NewTeamHandler(db)
+	// gameHandler := handlers.NewGameHandler(db)
+	// roundHandler := handlers.NewRoundHandler(db)
+	// champHandler := handlers.NewChampionshipHandler(db)
+	// gamePlayerHandler := handlers.NewGamePlayerHandler(db)
+	// setHandler := handlers.NewSetHandler(db)
+	// setActionHandler := handlers.NewSetActionHandler(db)
 
-	api := r.Group("/api/v1")
-	{
-		users := api.Group("/users")
-		{
-			users.GET("/", userHandler.GetAllUsers)
-			users.GET("/:user_id", userHandler.GetUserByID)
-			users.POST("/", userHandler.CreateUser)
-			users.PUT("/:user_id", userHandler.UpdateUser)
-			users.DELETE("/:user_id", userHandler.DeleteUser)
-		}
+	championshipHandler := handlers.NewChampionshipHandler(db)
 
-		teams := api.Group("/teams")
-		{
-			teams.POST("/", teamHandler.CreateTeam)
-			teams.GET("/", teamHandler.GetAllTeams)
-			teams.GET("/:id", teamHandler.GetTeamByID)
-			teams.PUT("/:id", teamHandler.UpdateTeam)
-			teams.DELETE("/:id", teamHandler.DeleteTeam)
-		}
+	api := r.Group("/api")
 
-		players := api.Group("/players")
-		{
-			players.POST("/", playerHandler.CreatePlayer)
-			players.GET("/", playerHandler.GetAllPlayers)
-			players.GET("/:id", playerHandler.GetPlayerByID)
-			players.PUT("/:id", playerHandler.UpdatePlayer)
-			players.DELETE("/:id", playerHandler.DeletePlayer)
-		}
+	api.POST("/championships", championshipHandler.Create)
+	api.GET("/championships", championshipHandler.GetAll)
+	api.GET("/championships/:id", championshipHandler.Get)
+	api.PUT("/championships/:id", championshipHandler.Update)
+	api.DELETE("/championships/:id", championshipHandler.Delete)
 
-		games := r.Group("/games")
-		{
-			games.POST("", gameHandler.CreateGame)
-			games.GET("", gameHandler.GetAllGames)
-			games.GET("/:id", gameHandler.GetGameByID)
-			games.PUT("/:id", gameHandler.UpdateGame)
-			games.DELETE("/:id", gameHandler.DeleteGame)
-		}
+	// api := r.Group("/api/v1")
+	// {
+	// users := api.Group("/users")
+	// {
+	// 	users.GET("/", userHandler.GetAllUsers)
+	// 	users.GET("/:user_id", userHandler.GetUserByID)
+	// 	users.POST("/", userHandler.CreateUser)
+	// 	users.PUT("/:user_id", userHandler.UpdateUser)
+	// 	users.DELETE("/:user_id", userHandler.DeleteUser)
+	// }
 
-		rounds := r.Group("/rounds")
-		{
-			rounds.POST("", roundHandler.CreateRound)
-			rounds.GET("", roundHandler.GetAllRounds)
-			rounds.GET("/:id", roundHandler.GetRoundByID)
-			rounds.PUT("/:id", roundHandler.UpdateRound)
-			rounds.DELETE("/:id", roundHandler.DeleteRound)
-		}
+	// teams := api.Group("/teams")
+	// {
+	// 	teams.POST("/", teamHandler.CreateTeam)
+	// 	teams.GET("/", teamHandler.GetAllTeams)
+	// 	teams.GET("/:id", teamHandler.GetTeamByID)
+	// 	teams.PUT("/:id", teamHandler.UpdateTeam)
+	// 	teams.DELETE("/:id", teamHandler.DeleteTeam)
+	// }
 
-		champs := r.Group("/championships")
-		{
-			champs.POST("", champHandler.CreateChampionship)
-			champs.GET("", champHandler.GetAllChampionships)
-			champs.GET("/:id", champHandler.GetChampionshipByID)
-			champs.PUT("/:id", champHandler.UpdateChampionship)
-			champs.DELETE("/:id", champHandler.DeleteChampionship)
-		}
+	// players := api.Group("/players")
+	// {
+	// 	players.POST("/", playerHandler.CreatePlayer)
+	// 	players.GET("/", playerHandler.GetAllPlayers)
+	// 	players.GET("/:id", playerHandler.GetPlayerByID)
+	// 	players.PUT("/:id", playerHandler.UpdatePlayer)
+	// 	players.DELETE("/:id", playerHandler.DeletePlayer)
+	// }
 
-		gamePlayers := r.Group("/game_players")
-		{
-			gamePlayers.POST("", gamePlayerHandler.CreateGamePlayer)
-			gamePlayers.GET("", gamePlayerHandler.GetAllGamePlayers)
-			gamePlayers.GET("/:id", gamePlayerHandler.GetGamePlayerByID)
-			gamePlayers.PUT("/:id", gamePlayerHandler.UpdateGamePlayer)
-			gamePlayers.DELETE("/:id", gamePlayerHandler.DeleteGamePlayer)
-		}
+	// games := r.Group("/games")
+	// {
+	// 	games.POST("", gameHandler.CreateGame)
+	// 	games.GET("", gameHandler.GetAllGames)
+	// 	games.GET("/:id", gameHandler.GetGameByID)
+	// 	games.PUT("/:id", gameHandler.UpdateGame)
+	// 	games.DELETE("/:id", gameHandler.DeleteGame)
+	// }
 
-		sets := r.Group("/sets")
-		{
-			sets.POST("", setHandler.CreateSet)
-			sets.GET("", setHandler.GetAllSets)
-			sets.GET("/:id", setHandler.GetSetByID)
-			sets.PUT("/:id", setHandler.UpdateSet)
-			sets.DELETE("/:id", setHandler.DeleteSet)
-		}
+	// rounds := r.Group("/rounds")
+	// {
+	// 	rounds.POST("", roundHandler.CreateRound)
+	// 	rounds.GET("", roundHandler.GetAllRounds)
+	// 	rounds.GET("/:id", roundHandler.GetRoundByID)
+	// 	rounds.PUT("/:id", roundHandler.UpdateRound)
+	// 	rounds.DELETE("/:id", roundHandler.DeleteRound)
+	// }
 
-		setActions := r.Group("/set_actions")
-		{
-			setActions.POST("", setActionHandler.CreateSetAction)
-			setActions.GET("", setActionHandler.GetAllSetActions)
-			setActions.GET("/:id", setActionHandler.GetSetActionByID)
-			setActions.PUT("/:id", setActionHandler.UpdateSetAction)
-			setActions.DELETE("/:id", setActionHandler.DeleteSetAction)
-		}
-	}
+	// champs := r.Group("/championships")
+	// {
+	// 	champs.POST("", championshipHandler.Create)
+	// 	champs.GET("", championshipHandler.GetAll)
+	// 	champs.GET("/:id", championshipHandler.Get)
+	// 	champs.PUT("/:id", championshipHandler.Update)
+	// 	champs.DELETE("/:id", championshipHandler.Delete)
+	// }
 
-	return r
+	// gamePlayers := r.Group("/game_players")
+	// {
+	// 	gamePlayers.POST("", gamePlayerHandler.CreateGamePlayer)
+	// 	gamePlayers.GET("", gamePlayerHandler.GetAllGamePlayers)
+	// 	gamePlayers.GET("/:id", gamePlayerHandler.GetGamePlayerByID)
+	// 	gamePlayers.PUT("/:id", gamePlayerHandler.UpdateGamePlayer)
+	// 	gamePlayers.DELETE("/:id", gamePlayerHandler.DeleteGamePlayer)
+	// }
+
+	// sets := r.Group("/sets")
+	// {
+	// 	sets.POST("", setHandler.CreateSet)
+	// 	sets.GET("", setHandler.GetAllSets)
+	// 	sets.GET("/:id", setHandler.GetSetByID)
+	// 	sets.PUT("/:id", setHandler.UpdateSet)
+	// 	sets.DELETE("/:id", setHandler.DeleteSet)
+	// }
+
+	// setActions := r.Group("/set_actions")
+	// {
+	// 	setActions.POST("", setActionHandler.CreateSetAction)
+	// 	setActions.GET("", setActionHandler.GetAllSetActions)
+	// 	setActions.GET("/:id", setActionHandler.GetSetActionByID)
+	// 	setActions.PUT("/:id", setActionHandler.UpdateSetAction)
+	// 	setActions.DELETE("/:id", setActionHandler.DeleteSetAction)
+	// }
+	// }
 }

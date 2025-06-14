@@ -2,11 +2,14 @@ package handlers
 
 import (
 	"net/http"
-	"time"
+
+	"fmt"
+
+	"volley/internal/models/dto"
+	"volley/internal/models/orm"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"volley/internal/models"
 )
 
 type ChampionshipHandler struct {
@@ -17,123 +20,78 @@ func NewChampionshipHandler(db *gorm.DB) *ChampionshipHandler {
 	return &ChampionshipHandler{DB: db}
 }
 
-// POST /championships
-func (h *ChampionshipHandler) CreateChampionship(c *gin.Context) {
-	var input models.CreateChampionship
+func (h *ChampionshipHandler) Create(c *gin.Context) {
+	var input dto.CreateChampionshipDTO
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	startDate, err := time.Parse("2006-01-02", input.StartDate)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid start date format"})
-		return
-	}
-
-	endDate, err := time.Parse("2006-01-02", input.EndDate)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid end date format"})
-		return
-	}
-
-	championship := models.Championship{
+	champ := orm.Championship{
 		Title:     input.Title,
-		StartDate: startDate,
-		EndDate:   endDate,
+		StartDate: input.StartDate,
+		EndDate:   input.EndDate,
 	}
 
-	if err := h.DB.Create(&championship).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create championship"})
+	if err := h.DB.Create(&champ).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, championship)
+	c.JSON(http.StatusCreated, champ)
 }
 
-// GET /championships
-func (h *ChampionshipHandler) GetAllChampionships(c *gin.Context) {
-	var championships []models.Championship
-	if err := h.DB.Preload("Rounds").Find(&championships).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch championships"})
-		return
-	}
-	c.JSON(http.StatusOK, championships)
+func (h *ChampionshipHandler) GetAll(c *gin.Context) {
+	var champs []orm.Championship
+	h.DB.Find(&champs)
+	c.JSON(http.StatusOK, champs)
 }
 
-// GET /championships/:id
-func (h *ChampionshipHandler) GetChampionshipByID(c *gin.Context) {
+func (h *ChampionshipHandler) Get(c *gin.Context) {
 	id := c.Param("id")
-	var championship models.Championship
+	var champ orm.Championship
+	if err := h.DB.First(&champ, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Not found"})
+		return
+	}
+	c.JSON(http.StatusOK, champ)
+}
 
-	if err := h.DB.Preload("Rounds").First(&championship, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Championship not found"})
+func (h *ChampionshipHandler) Update(c *gin.Context) {
+	id := c.Param("id")
+	var champ orm.Championship
+	if err := h.DB.First(&champ, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Not found"})
 		return
 	}
 
-	c.JSON(http.StatusOK, championship)
-}
-
-// PUT /championships/:id
-func (h *ChampionshipHandler) UpdateChampionship(c *gin.Context) {
-	id := c.Param("id")
-	var input models.UpdateChampionship
-
+	var input dto.UpdateChampionshipDTO
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var championship models.Championship
-	if err := h.DB.First(&championship, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Championship not found"})
-		return
-	}
-
-	if input.Title != nil {
-		championship.Title = *input.Title
-	}
-
-	if input.StartDate != "" {
-		startDate, err := time.Parse("2006-01-02", input.StartDate)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid start date format"})
-			return
-		}
-		championship.StartDate = startDate
-	}
-
-	if input.EndDate != "" {
-		endDate, err := time.Parse("2006-01-02", input.EndDate)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid end date format"})
-			return
-		}
-		championship.EndDate = endDate
-	}
-
-	if err := h.DB.Save(&championship).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update championship"})
-		return
-	}
-
-	c.JSON(http.StatusOK, championship)
+	h.DB.Model(&champ).Updates(input)
+	c.JSON(http.StatusOK, champ)
 }
 
-// DELETE /championships/:id
-func (h *ChampionshipHandler) DeleteChampionship(c *gin.Context) {
+func (h *ChampionshipHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
 
-	var championship models.Championship
-	if err := h.DB.First(&championship, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Championship not found"})
+	result := h.DB.Delete(&orm.Championship{}, id)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
 
-	if err := h.DB.Delete(&championship).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete championship"})
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": fmt.Sprintf("Championship with ID %s not found", id),
+		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Championship deleted"})
+	c.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("Championship with ID %s deleted successfully", id),
+	})
 }
