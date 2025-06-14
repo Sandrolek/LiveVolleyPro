@@ -20,15 +20,22 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	// setHandler := handlers.NewSetHandler(db)
 	// setActionHandler := handlers.NewSetActionHandler(db)
 
-	championshipHandler := handlers.NewChampionshipHandler(db)
-
 	api := r.Group("/api")
+
+	championshipHandler := handlers.NewChampionshipHandler(db)
+	roundHandler := handlers.NewRoundHandler(db)
 
 	api.POST("/championships", championshipHandler.Create)
 	api.GET("/championships", championshipHandler.GetAll)
 	api.GET("/championships/:id", championshipHandler.Get)
 	api.PUT("/championships/:id", championshipHandler.Update)
 	api.DELETE("/championships/:id", championshipHandler.Delete)
+
+	api.POST("/rounds", roundHandler.Create)
+	api.GET("/rounds", roundHandler.GetAll)
+	api.GET("/rounds/:id", roundHandler.Get)
+	api.PUT("/rounds/:id", roundHandler.Update)
+	api.DELETE("/rounds/:id", roundHandler.Delete)
 
 	// api := r.Group("/api/v1")
 	// {

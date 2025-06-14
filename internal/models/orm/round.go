@@ -14,13 +14,6 @@ type Round struct {
 	Games []Game
 }
 
-type CreateRound struct {
-	SerialNumber   uint8  `json:"serial_number" binding:"required"`
-	ChampionshipID int    `json:"championship_id" binding:"required"`
-	StartDate      string `json:"start_date"` // "YYYY-MM-DD"
-	EndDate        string `json:"end_date"`   // "YYYY-MM-DD"
-}
-
 // type Round struct {
 // 	RoundID        int        `gorm:"primaryKey" json:"round_id"`
 // 	SerialNumber   uint8      `json:"serial_number"`

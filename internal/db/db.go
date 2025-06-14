@@ -19,24 +19,28 @@ func InitDB() {
 		log.Fatal("Failed to connect to PostgreSQL:", err)
 	}
 
+	const DROP = false
 	// Drop tables in reverse dependency order
-	// err = DB.Migrator().DropTable(
-	// 	&orm.GamePlayer{},
-	// 	&orm.SetAction{},
-	// 	&orm.ActionRate{},
-	// 	&orm.Action{},
-	// 	&orm.Set{},
-	// 	&orm.Game{},
-	// 	&orm.Round{},
-	// 	&orm.Championship{},
-	// 	&orm.Player{},
-	// 	&orm.Team{},
-	// 	&orm.Amplua{},
-	// 	&orm.User{},
-	// )
-	// if err != nil {
-	// 	log.Fatalf("Failed to drop tables: %v", err)
-	// }
+
+	if DROP {
+		err = DB.Migrator().DropTable(
+			&orm.GamePlayer{},
+			&orm.SetAction{},
+			&orm.ActionRate{},
+			&orm.Action{},
+			&orm.Set{},
+			&orm.Game{},
+			&orm.Round{},
+			&orm.Championship{},
+			&orm.Player{},
+			&orm.Team{},
+			&orm.Amplua{},
+			&orm.User{},
+		)
+		if err != nil {
+			log.Fatalf("Failed to drop tables: %v", err)
+		}
+	}
 
 	// Create tables in dependency order
 	err = DB.AutoMigrate(

@@ -1,3 +1,4 @@
 .idea
 *.exe
 db_data/
+v1.json
