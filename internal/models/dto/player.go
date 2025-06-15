@@ -10,7 +10,7 @@ type CreatePlayerDTO struct {
 	Birthdate *time.Time `json:"birthdate,omitempty"`
 	Gender    string     `json:"gender" binding:"required,oneof=male female"`
 	Height    *float64   `json:"height,omitempty"`
-	Number    *uint8     `json:"number,omitempty"`
+	Number    *int       `json:"number,omitempty"`
 	TeamID    int        `json:"team_id" binding:"required"`
 	AmpluaID  int        `json:"amplua_id" binding:"required"`
 }
@@ -21,7 +21,7 @@ type UpdatePlayerDTO struct {
 	Birthdate *time.Time `json:"birthdate,omitempty"`
 	Gender    *string    `json:"gender,omitempty"` // optionally validate in handler
 	Height    *float64   `json:"height,omitempty"`
-	Number    *uint8     `json:"number,omitempty"`
+	Number    *int       `json:"number,omitempty"`
 	TeamID    *int       `json:"team_id,omitempty"`
 	AmpluaID  *int       `json:"amplua_id,omitempty"`
 }

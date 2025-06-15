@@ -10,7 +10,7 @@ type Player struct {
 	Birthdate *time.Time
 	Gender    string `gorm:"type:text;check:gender IN ('male','female')"`
 	Height    *float64
-	Number    *uint8
+	Number    *int
 
 	TeamID int
 	Team   Team
