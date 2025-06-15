@@ -28,6 +28,8 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	playerHandler := handlers.NewPlayerHandler(db)
 	setHandler := handlers.NewSetHandler(db)
 	ampluaHandler := handlers.NewAmpluaHandler(db)
+	actionHandler := handlers.NewActionHandler(db)
+	actionRateHandler := handlers.NewActionRateHandler(db)
 
 	api := r.Group("/api")
 
@@ -101,6 +103,24 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 		ampluas.GET("/:id", ampluaHandler.Get)
 		ampluas.PUT("/:id", ampluaHandler.Update)
 		ampluas.DELETE("/:id", ampluaHandler.Delete)
+	}
+
+	actions := api.Group("/actions")
+	{
+		actions.POST("/", actionHandler.Create)
+		actions.GET("/", actionHandler.GetAll)
+		actions.GET("/:id", actionHandler.Get)
+		actions.PUT("/:id", actionHandler.Update)
+		actions.DELETE("/:id", actionHandler.Delete)
+	}
+
+	actionRates := api.Group("/action_rates")
+	{
+		actionRates.POST("/", actionRateHandler.Create)
+		actionRates.GET("/", actionRateHandler.GetAll)
+		actionRates.GET("/:id", actionRateHandler.Get)
+		actionRates.PUT("/:id", actionRateHandler.Update)
+		actionRates.DELETE("/:id", actionRateHandler.Delete)
 	}
 
 	// api := r.Group("/api/v1")
