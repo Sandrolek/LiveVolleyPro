@@ -56,6 +56,7 @@ func InitDB() {
 		&orm.SetAction{},
 		&orm.ActionRate{},
 		&orm.Action{},
+		&orm.AuthToken{},
 	)
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)

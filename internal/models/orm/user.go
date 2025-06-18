@@ -1,5 +1,9 @@
 package orm
 
+import (
+	"time"
+)
+
 type User struct {
 	UserID int `gorm:"primaryKey"`
 
@@ -8,6 +12,12 @@ type User struct {
 	Email    string
 
 	Teams []Team
+}
+
+type AuthToken struct {
+	Token     string `gorm:"unique;not null"`
+	UserID    uint   `gorm:"not null"`
+	ExpiresAt time.Time
 }
 
 // type User struct {

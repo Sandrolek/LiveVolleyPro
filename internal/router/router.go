@@ -2,6 +2,7 @@ package router
 
 import (
 	"volley/internal/handlers"
+	"volley/internal/middlewares"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -30,10 +31,18 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	ampluaHandler := handlers.NewAmpluaHandler(db)
 	actionHandler := handlers.NewActionHandler(db)
 	actionRateHandler := handlers.NewActionRateHandler(db)
+	authHandler := handlers.NewAuthHandler(db)
 
 	api := r.Group("/api")
 
+	auth := api.Group("/")
+	{
+		auth.POST("/register", authHandler.Register)
+		auth.POST("/login", authHandler.Login)
+	}
+
 	championships := api.Group("/championships")
+	championships.Use(middlewares.AuthMiddleware(db))
 	{
 		championships.POST("/", championshipHandler.Create)
 		championships.GET("/", championshipHandler.GetAll)
@@ -43,6 +52,7 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 
 	rounds := api.Group("/rounds")
+	rounds.Use(middlewares.AuthMiddleware(db))
 	{
 		rounds.POST("/", roundHandler.Create)
 		rounds.GET("/", roundHandler.GetAll)
@@ -52,6 +62,7 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 
 	users := api.Group("/users")
+	users.Use(middlewares.AuthMiddleware(db))
 	{
 		users.POST("/", userHandler.Create)
 		users.GET("/", userHandler.GetAll)
@@ -61,6 +72,8 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 
 	teams := api.Group("/teams")
+	teams.Use(middlewares.AuthMiddleware(db))
+
 	{
 		teams.POST("/", teamHandler.Create)
 		teams.GET("/", teamHandler.GetAll)
@@ -70,6 +83,8 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 
 	players := api.Group("/players")
+	players.Use(middlewares.AuthMiddleware(db))
+
 	{
 		players.POST("/", playerHandler.Create)
 		players.GET("/", playerHandler.GetAll)
@@ -79,6 +94,8 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 
 	sets := api.Group("/sets")
+	sets.Use(middlewares.AuthMiddleware(db))
+
 	{
 		sets.POST("/", setHandler.Create)
 		sets.GET("/", setHandler.GetAll)
@@ -88,6 +105,8 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 
 	games := api.Group("/games")
+	games.Use(middlewares.AuthMiddleware(db))
+
 	{
 		games.POST("/", gameHandler.Create)
 		games.GET("/", gameHandler.GetAll)
@@ -97,6 +116,8 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 
 	ampluas := api.Group("/ampluas")
+	ampluas.Use(middlewares.AuthMiddleware(db))
+
 	{
 		ampluas.POST("/", ampluaHandler.Create)
 		ampluas.GET("/", ampluaHandler.GetAll)
@@ -106,6 +127,8 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 
 	actions := api.Group("/actions")
+	actions.Use(middlewares.AuthMiddleware(db))
+
 	{
 		actions.POST("/", actionHandler.Create)
 		actions.GET("/", actionHandler.GetAll)
@@ -115,6 +138,7 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 
 	actionRates := api.Group("/action_rates")
+	actionRates.Use(middlewares.AuthMiddleware(db))
 	{
 		actionRates.POST("/", actionRateHandler.Create)
 		actionRates.GET("/", actionRateHandler.GetAll)
