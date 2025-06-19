@@ -120,6 +120,8 @@ func (h *PlayerHandler) Update(c *gin.Context) {
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Player with ID %s not found", id)})
 		} else if strings.Contains(err.Error(), "SQLSTATE 23503") {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Referenced team or amplua does not exist"})
+		} else if strings.Contains(err.Error(), "SQLSTATE P0001") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Player number 1 is already taken in team 2"})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
