@@ -24,11 +24,11 @@ type Team struct {
 // 	//Games   []Game   `gorm:"foreignKey:TeamID"`
 // }
 
-type CreateTeam struct {
-	UserID int    `json:"user_id" binding:"required"`
-	Name   string `json:"name" binding:"required"`
-}
+// type CreateTeam struct {
+// 	UserID int    `json:"user_id" binding:"required"`
+// 	Name   string `json:"name" binding:"required"`
+// }
 
-type UpdateTeam struct {
-	Name string `json:"name" binding:"required"`
-}
+// type UpdateTeam struct {
+// 	Name string `json:"name" binding:"required"`
+// }

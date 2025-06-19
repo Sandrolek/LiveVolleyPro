@@ -34,14 +34,14 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	actionRateHandler := handlers.NewActionRateHandler(db)
 	authHandler := handlers.NewAuthHandler(db)
 
-	setActionHandler := handlers.NewSetActionHandler(services.NewSetActionService(db))
+	recordHandler := handlers.NewRecordHandler(services.NewSetActionService(db))
 	statsHandler := handlers.NewStatsHandler(services.NewStatsService(db))
 
 	api := r.Group("/api")
 
 	record := api.Group("/record")
 	{
-		record.POST("/action", setActionHandler.Create)
+		record.POST("/action", recordHandler.RecordAction)
 	}
 
 	stats := api.Group("/stats")

@@ -781,7 +781,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"first_name\": \"user\",\n  \"last_name\": \"user-ov\",\n  \"birthdate\": \"2001-09-11T00:00:00Z\",\n  \"gender\": \"male\",\n  \"height\": 1.69,\n  \"number\": 7,\n  \"team_id\": 2,\n  \"amplua_id\": 1\n}"
+									"raw": "{\n  \"first_name\": \"user1\",\n  \"last_name\": \"user-ov1\",\n  \"birthdate\": \"2001-09-11T00:00:00Z\",\n  \"gender\": \"male\",\n  \"height\": 1.69,\n  \"number\": 911,\n  \"team_id\": 2,\n  \"amplua_id\": 1\n}"
 								},
 								"url": {
 									"raw": "http://localhost:8080/api/players",

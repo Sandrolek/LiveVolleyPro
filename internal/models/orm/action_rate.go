@@ -7,6 +7,8 @@ type ActionRate struct {
 
 	ActionID int
 	Action   Action
+
+	_ struct{} `gorm:"uniqueIndex:idx_action_signature,priority:1"`
 }
 
 // type ActionRate struct {

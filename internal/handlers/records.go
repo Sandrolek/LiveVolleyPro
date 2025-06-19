@@ -9,16 +9,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type SetActionHandler struct {
+type RecordHandler struct {
 	Service *services.SetActionService
 }
 
-func NewSetActionHandler(service *services.SetActionService) *SetActionHandler {
-	return &SetActionHandler{Service: service}
+func NewRecordHandler(service *services.SetActionService) *RecordHandler {
+	return &RecordHandler{Service: service}
 }
 
-func (h *SetActionHandler) Create(c *gin.Context) {
-	var input dto.CreateSetActionDTO
+func (h *RecordHandler) RecordAction(c *gin.Context) {
+	var input dto.RecordActionDTO
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
