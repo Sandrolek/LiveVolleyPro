@@ -109,7 +109,7 @@ func (h *UserHandler) Update(c *gin.Context) {
 
 	if err := h.Service.Update(userID, updates); err != nil {
 		if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User with ID %s not found", userID)})
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User with ID %d not found", userID)})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}

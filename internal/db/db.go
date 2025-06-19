@@ -20,7 +20,7 @@ func InitDB() {
 		log.Fatal("Failed to connect to PostgreSQL:", err)
 	}
 
-	const DROP = false
+	const DROP = true
 	// Drop tables in reverse dependency order
 
 	if DROP {

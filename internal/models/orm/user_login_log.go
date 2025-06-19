@@ -8,9 +8,9 @@ type UserLoginLog struct {
 	Token  string
 	Time   time.Time `gorm:"autoCreateTime"`
 
-	User User `gorm:"constraint:OnDelete:CASCADE"`
+	User User
 }
 
 func (UserLoginLog) TableName() string {
-	return "user_login_log"
+	return "user_login_logs"
 }
