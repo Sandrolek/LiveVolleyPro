@@ -22,36 +22,14 @@ func NewUserHandler(db *gorm.DB) *UserHandler {
 	}
 }
 
-//func (h *UserHandler) Create(c *gin.Context) {
-//	var input dto.CreateUserDTO
-//	if err := c.ShouldBindJSON(&input); err != nil {
-//		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-//		return
-//	}
-//
-//	user := orm.User{
-//		Name:     input.Name,
-//		Password: input.Password,
-//		Email:    input.Email,
-//	}
-//
-//	if err := h.Service.Create(&user, "Teams"); err != nil {
-//		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-//		return
-//	}
-//
-//	c.JSON(http.StatusCreated, user)
-//}
-
 func (h *UserHandler) Get(c *gin.Context) {
-	// Получаем userID из контекста
 	userIDValue, exists := c.Get("userID")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: userID not found in context"})
 		return
 	}
 
-	userID, ok := userIDValue.(uint) // или string/int, в зависимости от типа
+	userID, ok := userIDValue.(uint)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid userID type in context"})
 		return
@@ -69,17 +47,6 @@ func (h *UserHandler) Get(c *gin.Context) {
 
 	c.JSON(http.StatusOK, user)
 }
-
-//func (h *UserHandler) GetAll(c *gin.Context) {
-//	var users []orm.User
-//
-//	if err := h.Service.GetAll(&users, "user_id ASC", "Teams"); err != nil {
-//		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-//		return
-//	}
-//
-//	c.JSON(http.StatusOK, users)
-//}
 
 func (h *UserHandler) Update(c *gin.Context) {
 	userIDValue, exists := c.Get("userID")

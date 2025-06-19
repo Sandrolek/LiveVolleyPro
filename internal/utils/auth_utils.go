@@ -1,11 +1,12 @@
 package utils
 
 import (
-	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 	"math/rand"
 	"time"
 	"volley/internal/models/orm"
+
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func HashPassword(password string) string {
@@ -33,7 +34,6 @@ func GenerateToken(db *gorm.DB, userID uint) (string, error) {
 		ExpiresAt: time.Now().Add(24 * time.Hour * 7), // 7 дней
 	}
 
-	// Правильное использование GORM
 	if err := db.Create(&authToken).Error; err != nil {
 		return "", err
 	}

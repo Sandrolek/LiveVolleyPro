@@ -19,7 +19,7 @@ type UpdatePlayerDTO struct {
 	FirstName *string    `json:"first_name,omitempty"`
 	LastName  *string    `json:"last_name,omitempty"`
 	Birthdate *time.Time `json:"birthdate,omitempty"`
-	Gender    *string    `json:"gender,omitempty"` // optionally validate in handler
+	Gender    *string    `json:"gender,omitempty"`
 	Height    *float64   `json:"height,omitempty"`
 	Number    *int       `json:"number,omitempty"`
 	TeamID    *int       `json:"team_id,omitempty"`

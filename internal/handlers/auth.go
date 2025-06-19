@@ -20,7 +20,6 @@ func NewAuthHandler(db *gorm.DB) *AuthHandler {
 	return &AuthHandler{DB: db}
 }
 
-// Register - регистрация нового пользователя
 func (h *AuthHandler) Register(c *gin.Context) {
 	var input dto.CreateUserDTO
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -28,14 +27,12 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
-	// Проверка существования пользователя
 	var existingUser orm.User
 	if err := h.DB.Where("name = ?", input.Name).First(&existingUser).Error; err == nil {
 		c.JSON(http.StatusConflict, gin.H{"error": "Username already exists"})
 		return
 	}
 
-	// Создание пользователя
 	user := orm.User{
 		Name:     input.Name,
 		Email:    input.Email,
@@ -50,7 +47,6 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
 }
 
-// Login - аутентификация пользователя
 func (h *AuthHandler) Login(c *gin.Context) {
 	var input dto.UserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -58,20 +54,17 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	// Поиск пользователя
 	var user orm.User
 	if err := h.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
 
-	// Проверка пароля
 	if !utils.CheckPassword(input.Password, user.Password) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
 
-	// Генерация токена
 	token, err := utils.GenerateToken(h.DB, uint(user.UserID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})

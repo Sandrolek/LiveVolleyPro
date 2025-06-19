@@ -17,7 +17,6 @@ func (s *CRUDService[T]) Create(entity *T, preloadFields ...string) error {
 		return err
 	}
 
-	// Reload the entity with preloaded fields
 	tx := s.DB
 	for _, field := range preloadFields {
 		tx = tx.Preload(field)
@@ -28,7 +27,6 @@ func (s *CRUDService[T]) Create(entity *T, preloadFields ...string) error {
 func (s *CRUDService[T]) GetWhere(out interface{}, condition string, args any, order string, preload ...string) error {
 	db := s.DB
 
-	// Применяем preload для указанных связей
 	for _, p := range preload {
 		db = db.Preload(p)
 	}

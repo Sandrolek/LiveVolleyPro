@@ -21,7 +21,6 @@ func InitDB() {
 	}
 
 	const DROP = true
-	// Drop tables in reverse dependency order
 
 	if DROP {
 		err = DB.Migrator().DropTable(
@@ -45,7 +44,6 @@ func InitDB() {
 		}
 	}
 
-	// Create tables in dependency order
 	err = DB.AutoMigrate(
 		&orm.User{},
 		&orm.Amplua{},

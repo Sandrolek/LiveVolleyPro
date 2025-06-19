@@ -22,7 +22,6 @@ func (s *StatsService) GetPlayerStats(input dto.PlayerStatsRequestDTO) (map[stri
 		return nil, errors.New("either set_id or game_id must be provided")
 	}
 
-	// Build base query
 	query := s.DB.Model(&orm.SetAction{}).
 		Select("actions.name AS action_name, action_rates.signature, COUNT(*) as total").
 		Joins("JOIN action_rates ON action_rates.action_rate_id = set_actions.action_rate_id").
@@ -38,7 +37,6 @@ func (s *StatsService) GetPlayerStats(input dto.PlayerStatsRequestDTO) (map[stri
 			Where("sets.game_id = ?", *input.GameID)
 	}
 
-	// Result struct for raw scan
 	type row struct {
 		ActionName string
 		Signature  string
@@ -50,7 +48,6 @@ func (s *StatsService) GetPlayerStats(input dto.PlayerStatsRequestDTO) (map[stri
 		return nil, err
 	}
 
-	// Build nested map
 	result := make(map[string]map[string]int)
 	for _, r := range rows {
 		if _, ok := result[r.ActionName]; !ok {

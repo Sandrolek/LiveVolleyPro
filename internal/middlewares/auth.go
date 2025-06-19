@@ -25,14 +25,12 @@ func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		// Проверка токена в БД
 		var authToken orm.AuthToken
 		if err := db.Where("token = ? AND expires_at > ?", token, time.Now()).First(&authToken).Error; err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
 			return
 		}
 
-		// Добавляем userID в контекст
 		c.Set("userID", authToken.UserID)
 		c.Next()
 	}

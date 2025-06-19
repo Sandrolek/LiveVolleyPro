@@ -16,35 +16,9 @@ type Game struct {
 	OppTeamID int
 	OppTeam   Team
 
-	TeamScore    *int // ✅ new, nullable
-	OppTeamScore *int // ✅ new, nullable
+	TeamScore    *int
+	OppTeamScore *int
 
 	Sets        []Set
 	GamePlayers []GamePlayer
 }
-
-// type CreateGame struct {
-// 	RoundID   int    `json:"round_id" binding:"required"`
-// 	TeamID    int    `json:"team_id" binding:"required"`
-// 	OppTeamID int    `json:"opp_team_id" binding:"required"`
-// 	Date      string `json:"date" binding:"required"`
-// 	Win       bool   `json:"win"`
-// }
-
-// type UpdateGame struct {
-// 	Date string `json:"date"`
-// 	Win  *bool  `json:"win"`
-// }
-
-// type Game struct {
-// 	GameID  int       `gorm:"primaryKey" json:"game_id"`
-// 	RoundID int       `json:"round_id"`
-// 	TeamID  int       `json:"team_id"`
-// 	Date    time.Time `json:"date"`
-// 	Win     bool      `json:"win"`
-
-// 	//Rounds  []Round      `gorm:"foreignKey:GameID"`
-// 	Players []GamePlayer `gorm:"foreignKey:GameID"`
-// 	Team    Team         `gorm:"foreignKey:TeamID"`
-// 	Sets    []Set        `gorm:"foreignKey:GameID"`
-// }

@@ -28,7 +28,6 @@ var actionAbbrMap = map[string]string{
 }
 
 func (s *SetActionService) RecordAction(setID int, record string) error {
-	// Parse format like "12A++" or "5R-"
 	re := regexp.MustCompile(`^(\d+)([ABC SR])([+_\-]{1,2}|\+\-)$`)
 	matches := re.FindStringSubmatch(record)
 	if len(matches) != 4 {
@@ -44,25 +43,21 @@ func (s *SetActionService) RecordAction(setID int, record string) error {
 		return fmt.Errorf("unknown action abbreviation: %s", abbr)
 	}
 
-	// Find Player by number
 	var player orm.Player
 	if err := s.DB.Where("number = ?", playerNumber).First(&player).Error; err != nil {
 		return errors.New("player not found")
 	}
 
-	// Find Action by name
 	var action orm.Action
 	if err := s.DB.Where("name = ?", actionName).First(&action).Error; err != nil {
 		return errors.New("action not found")
 	}
 
-	// Find ActionRate by ActionID + signature
 	var rateObj orm.ActionRate
 	if err := s.DB.Where("action_id = ? AND signature = ?", action.ActionID, rate).First(&rateObj).Error; err != nil {
 		return errors.New("action rate not found")
 	}
 
-	// Create SetAction record
 	setAction := orm.SetAction{
 		SetID:        setID,
 		PlayerID:     player.PlayerID,

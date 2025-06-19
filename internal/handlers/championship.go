@@ -97,7 +97,6 @@ func (h *ChampionshipHandler) Update(c *gin.Context) {
 		return
 	}
 
-	// Optional: return updated entity
 	var updated orm.Championship
 	_ = h.Service.GetById(id, &updated)
 

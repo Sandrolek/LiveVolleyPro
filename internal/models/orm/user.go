@@ -19,14 +19,3 @@ type AuthToken struct {
 	UserID    uint   `gorm:"not null"`
 	ExpiresAt time.Time
 }
-
-// type User struct {
-// 	gorm.Model
-// 	UserID   int    `gorm:"primaryKey" json:"user_id"`
-// 	Name     string `gorm:"size:45" json:"name"`
-// 	Password string `gorm:"size:255" json:"password"`
-// 	Email    string `gorm:"size:255" json:"email"`
-
-// 	// Teams []Team `gorm:"foreignKey:UserID"`
-// 	// Teams []Team `gorm:"foreignKey:UserID" json:"teams"`
-// }
