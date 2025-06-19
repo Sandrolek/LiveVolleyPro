@@ -2,6 +2,7 @@ package db
 
 import (
 	"log"
+	"volley/internal/db/seeds"
 	"volley/internal/models/orm"
 
 	"gorm.io/driver/postgres"
@@ -64,6 +65,8 @@ func InitDB() {
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}
+
+	seeds.SeedAll(DB)
 
 	createTokenExpiryTrigger := `
 	CREATE OR REPLACE FUNCTION set_token_expiry()
