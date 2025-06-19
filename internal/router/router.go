@@ -3,6 +3,7 @@ package router
 import (
 	"volley/internal/handlers"
 	"volley/internal/middlewares"
+	"volley/internal/services"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -33,7 +34,20 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	actionRateHandler := handlers.NewActionRateHandler(db)
 	authHandler := handlers.NewAuthHandler(db)
 
+	setActionHandler := handlers.NewSetActionHandler(services.NewSetActionService(db))
+	statsHandler := handlers.NewStatsHandler(services.NewStatsService(db))
+
 	api := r.Group("/api")
+
+	record := api.Group("/record")
+	{
+		record.POST("/action", setActionHandler.Create)
+	}
+
+	stats := api.Group("/stats")
+	{
+		stats.POST("/player", statsHandler.GetPlayerStats)
+	}
 
 	auth := api.Group("/")
 	{
