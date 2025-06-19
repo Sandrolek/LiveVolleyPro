@@ -9,7 +9,7 @@ type User struct {
 
 	Name     string
 	Password string
-	Email    string
+	Email    string `gorm:"unique;not null"`
 
 	Teams []Team
 }

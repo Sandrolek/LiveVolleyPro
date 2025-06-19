@@ -60,7 +60,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	// Поиск пользователя
 	var user orm.User
-	if err := h.DB.Where("name = ?", input.Name).First(&user).Error; err != nil {
+	if err := h.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
