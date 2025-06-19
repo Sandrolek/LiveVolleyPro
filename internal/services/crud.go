@@ -25,6 +25,17 @@ func (s *CRUDService[T]) Create(entity *T, preloadFields ...string) error {
 	return tx.First(entity).Error
 }
 
+func (s *CRUDService[T]) GetWhere(out interface{}, condition string, args any, order string, preload ...string) error {
+	db := s.DB
+
+	// Применяем preload для указанных связей
+	for _, p := range preload {
+		db = db.Preload(p)
+	}
+
+	return db.Where(condition, args).Order(order).Find(out).Error
+}
+
 func (s *CRUDService[T]) GetById(id any, out *T, fields ...string) error {
 	tx := s.DB
 	for _, field := range fields {

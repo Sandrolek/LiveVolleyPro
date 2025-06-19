@@ -30,19 +30,18 @@ func (h *TeamHandler) Create(c *gin.Context) {
 		return
 	}
 
+	userID := c.MustGet("userID").(uint)
+
 	team := orm.Team{
 		Name:   input.Name,
-		UserID: input.UserID,
+		UserID: int(userID),
 	}
 
 	if err := h.Service.Create(&team); err != nil {
-
-		fmt.Println(err)
 		if strings.Contains(err.Error(), "SQLSTATE 23503") {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "User with the specified ID does not exist"})
 			return
 		}
-
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -52,8 +51,9 @@ func (h *TeamHandler) Create(c *gin.Context) {
 
 func (h *TeamHandler) Get(c *gin.Context) {
 	id := c.Param("id")
-	var team orm.Team
+	userID := c.MustGet("userID").(uint)
 
+	var team orm.Team
 	if err := h.Service.GetById(id, &team, "User", "Players"); err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Team with ID %s not found", id)})
@@ -63,13 +63,19 @@ func (h *TeamHandler) Get(c *gin.Context) {
 		return
 	}
 
+	if team.UserID != int(userID) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You do not have access to this team"})
+		return
+	}
+
 	c.JSON(http.StatusOK, team)
 }
 
 func (h *TeamHandler) GetAll(c *gin.Context) {
-	var teams []orm.Team
+	userID := c.MustGet("userID").(uint)
 
-	if err := h.Service.GetAll(&teams, "team_id ASC", "User", "Players"); err != nil {
+	var teams []orm.Team
+	if err := h.Service.GetWhere(&teams, "user_id = ?", userID, "team_id ASC", "User", "Players"); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -79,8 +85,20 @@ func (h *TeamHandler) GetAll(c *gin.Context) {
 
 func (h *TeamHandler) Update(c *gin.Context) {
 	id := c.Param("id")
-	var input dto.UpdateTeamDTO
+	userID := c.MustGet("userID").(uint)
 
+	var team orm.Team
+	if err := h.Service.GetById(id, &team); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Team with ID %s not found", id)})
+		return
+	}
+
+	if team.UserID != int(userID) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to update this team"})
+		return
+	}
+
+	var input dto.UpdateTeamDTO
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -90,16 +108,9 @@ func (h *TeamHandler) Update(c *gin.Context) {
 	if input.Name != nil {
 		updates["name"] = *input.Name
 	}
-	if input.UserID != nil {
-		updates["user_id"] = *input.UserID
-	}
 
 	if err := h.Service.Update(id, updates); err != nil {
-		if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Team with ID %s not found", id)})
-		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -111,14 +122,22 @@ func (h *TeamHandler) Update(c *gin.Context) {
 
 func (h *TeamHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
+	userID := c.MustGet("userID").(uint)
 
-	deleted, err := h.Service.Delete(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	var team orm.Team
+	if err := h.Service.GetById(id, &team); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Team with ID %s not found", id)})
 		return
 	}
-	if !deleted {
-		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Team with ID %s not found", id)})
+
+	if team.UserID != int(userID) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to delete this team"})
+		return
+	}
+
+	_, err := h.Service.Delete(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

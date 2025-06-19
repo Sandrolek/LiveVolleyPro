@@ -22,34 +22,45 @@ func NewUserHandler(db *gorm.DB) *UserHandler {
 	}
 }
 
-func (h *UserHandler) Create(c *gin.Context) {
-	var input dto.CreateUserDTO
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	user := orm.User{
-		Name:     input.Name,
-		Password: input.Password,
-		Email:    input.Email,
-	}
-
-	if err := h.Service.Create(&user, "Teams"); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, user)
-}
+//func (h *UserHandler) Create(c *gin.Context) {
+//	var input dto.CreateUserDTO
+//	if err := c.ShouldBindJSON(&input); err != nil {
+//		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+//		return
+//	}
+//
+//	user := orm.User{
+//		Name:     input.Name,
+//		Password: input.Password,
+//		Email:    input.Email,
+//	}
+//
+//	if err := h.Service.Create(&user, "Teams"); err != nil {
+//		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+//		return
+//	}
+//
+//	c.JSON(http.StatusCreated, user)
+//}
 
 func (h *UserHandler) Get(c *gin.Context) {
-	id := c.Param("id")
-	var user orm.User
+	// Получаем userID из контекста
+	userIDValue, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: userID not found in context"})
+		return
+	}
 
-	if err := h.Service.GetById(id, &user, "Teams"); err != nil {
+	userID, ok := userIDValue.(uint) // или string/int, в зависимости от типа
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid userID type in context"})
+		return
+	}
+
+	var user orm.User
+	if err := h.Service.GetById(userID, &user, "Teams"); err != nil {
 		if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User with ID %s not found", id)})
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User with ID %d not found", userID)})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
@@ -59,19 +70,25 @@ func (h *UserHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func (h *UserHandler) GetAll(c *gin.Context) {
-	var users []orm.User
-
-	if err := h.Service.GetAll(&users, "user_id ASC", "Teams"); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, users)
-}
+//func (h *UserHandler) GetAll(c *gin.Context) {
+//	var users []orm.User
+//
+//	if err := h.Service.GetAll(&users, "user_id ASC", "Teams"); err != nil {
+//		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+//		return
+//	}
+//
+//	c.JSON(http.StatusOK, users)
+//}
 
 func (h *UserHandler) Update(c *gin.Context) {
-	id := c.Param("id")
+	userIDValue, exists := c.Get("userID")
+	if !exists {
+		c.JSON(401, gin.H{"error": "userID not found in context"})
+		return
+	}
+	userID := userIDValue.(uint)
+
 	var input dto.UpdateUserDTO
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -90,9 +107,9 @@ func (h *UserHandler) Update(c *gin.Context) {
 		updates["email"] = *input.Email
 	}
 
-	if err := h.Service.Update(id, updates); err != nil {
+	if err := h.Service.Update(userID, updates); err != nil {
 		if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User with ID %s not found", id)})
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User with ID %s not found", userID)})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
@@ -100,23 +117,33 @@ func (h *UserHandler) Update(c *gin.Context) {
 	}
 
 	var updated orm.User
-	_ = h.Service.GetById(id, &updated, "Teams")
+	_ = h.Service.GetById(userID, &updated, "Teams")
 
 	c.JSON(http.StatusOK, updated)
 }
 
 func (h *UserHandler) Delete(c *gin.Context) {
-	id := c.Param("id")
+	userIDValue, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: userID not found in context"})
+		return
+	}
 
-	deleted, err := h.Service.Delete(id)
+	userID, ok := userIDValue.(uint)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid userID type in context"})
+		return
+	}
+
+	deleted, err := h.Service.Delete(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	if !deleted {
-		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User with ID %s not found", id)})
+		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User with ID %d not found", userID)})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("User with ID %s deleted successfully", id)})
+	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("User with ID %d deleted successfully", userID)})
 }

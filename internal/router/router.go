@@ -11,17 +11,6 @@ import (
 
 func SetupRouter(r *gin.Engine, db *gorm.DB) {
 
-	// userRepo := repositories.NewUserRepository(db)
-	// userHandler := handlers.NewUserHandler(userRepo)
-	// playerHandler := handlers.NewPlayerHandler(db)
-	// teamHandler := handlers.NewTeamHandler(db)
-	// gameHandler := handlers.NewGameHandler(db)
-	// roundHandler := handlers.NewRoundHandler(db)
-	// champHandler := handlers.NewChampionshipHandler(db)
-	// gamePlayerHandler := handlers.NewGamePlayerHandler(db)
-	// setHandler := handlers.NewSetHandler(db)
-	// setActionHandler := handlers.NewSetActionHandler(db)
-
 	championshipHandler := handlers.NewChampionshipHandler(db)
 	roundHandler := handlers.NewRoundHandler(db)
 	userHandler := handlers.NewUserHandler(db)
@@ -92,8 +81,8 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 		teams.POST("/", teamHandler.Create)
 		teams.GET("/", teamHandler.GetAll)
 		teams.GET("/:id", teamHandler.Get)
-		teams.PUT("/", teamHandler.Update)
-		teams.DELETE("/", teamHandler.Delete)
+		teams.PUT("/:id", teamHandler.Update)
+		teams.DELETE("/:id", teamHandler.Delete)
 	}
 
 	players := api.Group("/players")
