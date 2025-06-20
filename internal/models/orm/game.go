@@ -19,6 +19,5 @@ type Game struct {
 	TeamScore    *int
 	OppTeamScore *int
 
-	Sets        []Set
-	GamePlayers []GamePlayer
+	Sets []Set
 }

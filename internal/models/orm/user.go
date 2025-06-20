@@ -18,4 +18,6 @@ type AuthToken struct {
 	Token     string `gorm:"unique;not null"`
 	UserID    uint   `gorm:"not null"`
 	ExpiresAt time.Time
+
+	User User
 }

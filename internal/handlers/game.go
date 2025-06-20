@@ -38,7 +38,7 @@ func (h *GameHandler) Create(c *gin.Context) {
 		OppTeamID: input.OppTeamID,
 	}
 
-	if err := h.Service.Create(&game, "Round", "Team", "OppTeam", "Sets", "GamePlayers"); err != nil {
+	if err := h.Service.Create(&game, "Round", "Team", "OppTeam", "Sets"); err != nil {
 		if strings.Contains(err.Error(), "SQLSTATE 23503") {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "One or more referenced IDs (Round, Team, OppTeam) do not exist"})
 			return
@@ -54,7 +54,7 @@ func (h *GameHandler) Get(c *gin.Context) {
 	id := c.Param("id")
 	var game orm.Game
 
-	if err := h.Service.GetById(id, &game, "Round", "Team", "OppTeam", "Sets", "GamePlayers"); err != nil {
+	if err := h.Service.GetById(id, &game, "Round", "Team", "OppTeam", "Sets"); err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Game with ID %s not found", id)})
 		} else {
@@ -69,7 +69,7 @@ func (h *GameHandler) Get(c *gin.Context) {
 func (h *GameHandler) GetAll(c *gin.Context) {
 	var games []orm.Game
 
-	if err := h.Service.GetAll(&games, "game_id ASC", "Round", "Team", "OppTeam", "Sets", "GamePlayers"); err != nil {
+	if err := h.Service.GetAll(&games, "game_id ASC", "Round", "Team", "OppTeam", "Sets"); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -115,7 +115,7 @@ func (h *GameHandler) Update(c *gin.Context) {
 	}
 
 	var updated orm.Game
-	_ = h.Service.GetById(id, &updated, "Round", "Team", "OppTeam", "Sets", "GamePlayers")
+	_ = h.Service.GetById(id, &updated, "Round", "Team", "OppTeam", "Sets")
 
 	c.JSON(http.StatusOK, updated)
 }

@@ -24,7 +24,6 @@ func InitDB() {
 
 	if DROP {
 		err = DB.Migrator().DropTable(
-			&orm.GamePlayer{},
 			&orm.SetAction{},
 			&orm.ActionRate{},
 			&orm.Action{},
@@ -52,7 +51,6 @@ func InitDB() {
 		&orm.Game{},
 		&orm.Round{},
 		&orm.Championship{},
-		&orm.GamePlayer{},
 		&orm.Set{},
 		&orm.SetAction{},
 		&orm.ActionRate{},
